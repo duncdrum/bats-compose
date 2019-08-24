@@ -1,0 +1,29 @@
+dist: xenial
+language: java
+
+jdk:
+  - openjdk8
+  - openjdk11
+
+services:
+  - docker
+
+cache:
+  directories:
+  - $HOME/.m2
+
+before_install:
+  - npm i -g bats
+  # we'll start the pre-published image from plugin instead
+  - docker run -dit --name exist -p 8080:8080 existdb/existdb:latest
+
+
+install:
+  - mvn clean package -q
+  - sleep 30
+  - docker ps
+  - bats --version
+
+script:
+  - mvn test
+  - mvn integration-test
