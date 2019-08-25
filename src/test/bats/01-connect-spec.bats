@@ -22,7 +22,6 @@
 }
 
 @test "logs are error free" {
-  skip
-  run docker logs exist | grep -o 'ERROR'
-  [ "$status" -eq 1 ]
+  result=$(docker logs exist | grep -ow -c 'ERROR' || true)
+  [ "$result" -eq 0 ]
 }
